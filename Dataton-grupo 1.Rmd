@@ -1,0 +1,68 @@
+---
+title: "Dataton 1"
+author: "Angie M. Rodriguez"
+date: "9/17/2021"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+1.Base de datos sobre cronología de epidemias, que contenga información sobre al menos su duración y el patógeno que la ocasionó. 
+```{r}
+library(htmltab)
+link = "https://es.wikipedia.org/wiki/Anexo:Cronolog%C3%ADa_de_epidemias"
+path = "/html/body/div[3]/div[3]/div[5]/div[1]/table[2]/tbody"
+install.packages("htmltab")
+dataWS = htmltab(link, path)
+head(dataWS)
+```
+
+2. Base de datos simple que contenga información sobre el número de vacunas aplicadas, el número de personas con una dosis, el número de personas con dos dosis, los vacunados del día de hoy, y las dosis aplicadas en el 8tavo vacunatón.
+```{r}
+library(rvest)
+url="https://www.gob.pe/institucion/pcm/campa%C3%B1as/3451-campana-nacional-de-vacunacion-contra-la-covid-19"
+pagina_web=read_html(url)
+css_totalvacuna="div.w-full"
+totalvacuna_html <- html_nodes(pagina_web,css_totalvacuna)
+totalvacuna_texto <- html_text(totalvacuna_html)
+head(totalvacuna_texto)
+css_una="div.font-bold.text-3xl"  
+una_html <- html_nodes(pagina_web,css_una)
+una_texto <- html_text(una_html)
+head(una_texto)
+data2 <- data.frame(TOTAL = totalvacuna_texto, UNA= una_texto)
+head(data2)
+```
+
+3. Base de datos sobre los Centros de Vacunación COVID-19 en el Perú
+```{r}
+library(rvest)
+centro="https://www.gob.pe/institucion/pcm/campa%C3%B1as/3451-campana-nacional-de-vacunacion-contra-la-covid-19"
+pagina_web=read_html(centro)
+css_nombre= "ul" 
+nombre_html <- html_nodes(pagina_web,css_nombre)
+centros_texto <- html_text(nombre_html) 
+centro_salud<-data.frame(CENTROS = centros_texto)
+```
+
+4. Base de datos sobre la Programación de la Vacunación COVID-19 en el Perú
+```{r}
+
+```
+
+5. Un mapa del Perú por distritos.
+```{r}
+library(sp)
+install.packages("rgdal")
+library(rgdal)
+fromGit=("https://github.com/samanthagp/Estad-stica/blob/main/INEI_LIMITE_DEPARTAMENTAL_GEOGPSPERU_JUANSUYO_931381206.json?raw=true") #link desde github
+wazipMap <- rgdal::readOGR(fromGit,stringsAsFactors = FALSE)
+plot(wazipMap)
+```
+
