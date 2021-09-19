@@ -1,0 +1,127 @@
+---
+title: "PC1"
+output: html_document
+---
+1.
+```{r}
+library(htmltab)
+library(stringr)
+link = "https://es.wikipedia.org/wiki/%C3%8Dndice_de_desempe%C3%B1o_ambiental"
+path = "/html/body/div[3]/div[3]/div[5]/div[1]/table[2]"
+data1 = htmltab(link, path)
+head(data1)
+```
+
+```{r}
+link2 = "https://es.wikipedia.org/wiki/Ministro_del_Ambiente_del_Per%C3%BA"
+path2 = "/html/body/div[3]/div[3]/div[5]/div[1]/table[2]/tbody"
+data2 = htmltab(link2, path2)
+head(data2)
+```
+
+```{r}
+library(rvest)
+
+#Intento1
+
+url="https://sinia.minam.gob.pe/normas/aprueban-limites-maximos-permisibles-emisiones-atmosfericas-plantas"
+pagina_web=read_html(url)
+css_tratados="div.field-label"     
+tratados_html <- html_nodes(pagina_web,css_tratados)
+tratados_texto <- html_text(tratados_html)
+head(tratados_texto)
+
+css_contenido="div.field-items"     
+contenido_html <- html_nodes(pagina_web,css_contenido)
+contenido_texto <- html_text(contenido_html)
+head(contenido_texto)
+
+data3 <- data.frame(TRATADOS = tratados_texto, CONTENIDO= contenido_texto)
+head(data3)
+
+----------
+#Intento2
+
+url="https://es.wikipedia.org/wiki/%C3%8Dndice_de_desempe%C3%B1o_ambiental"
+pagina_web=read_html(url)
+css_tratados="td"     
+tratados_html <- html_nodes(pagina_web,css_tratados)
+tratados_texto <- html_text(tratados_html)
+head(tratados_texto)
+data3 <- data.frame(TRATADOS = tratados_texto)
+head(data3)
+
+------------------------------------
+#Intento3
+  
+url="https://www.gob.pe/institucion/minam/funcionarios"
+pagina_web=read_html(url)
+css_nombre="a.institution_higher-official-name.track-ga-click.d-block.mb-1"     
+nombre_html <- html_nodes(pagina_web,css_nombre)
+nombre_texto <- html_text(nombre_html)
+head(nombre_texto)
+
+css_c="h3.font-light.mb-6"     
+c_html <- html_nodes(pagina_web,css_c)
+c_texto <- html_text(c_html)
+head(c_texto)
+
+data3 <- data.frame(TRATADOS = nombre_texto, CONTENIDO= c_texto)
+head(data3)
+
+```
+
+2. 
+```{r}
+
+```
+
+3.
+```{r}
+ObjetivosPoliticaNacionaldelAmbientePerú = data.frame( Biodiversidad_y_Bosques= c("Reducir especies amenazadas", "Reducir tasa de pérdida de bosques", "Aumentar reforestación", "Lograr uso sostenible de bosques","Conservar diversidad biológica"), Calidad_Ambiental = c("Mejorar calidad del aire", "Crear planes de cierre de pasivos ambientales mineros", "Alcanzar residuos de disposición final adecuada ", "Mejorar calidad del suelo", "Aumentar % de limpieza de océanos"), Cambio_Climático= c("Reducir pérdidas por cambio climático", "Cumplir con Contribuciones Nacionalmente Determinadas", "Reducir en 30% las emisiones de CO2", "Reducir las emisiones por cooperación internacional", "Evitar la acidificación de los mares"), Producción_eficiente_y_sostenible= c("Aumentar el uso de fuentes renovables de energía", "Incrementar nivel de ecoeficiencia de entidades públicas", "Lograr que 200 empresas peruanas cumplan los criterios de bio y econegocios", "Incentivar a la creación de empresas ecoamigables", "Financiar proyectos sostenibles locales"), Institucionalidad_ambiental= c("Gestionar adecuadamente conflictos ambientales", "Fortalecer las instituciones ambientales", "Incrementar la producción científica en temas ambientales", "Evaluar vigencia de normativas ambientales existentes", "Incrementar personal administrativo del MINAM"))
+View(ObjetivosPoliticaNacionaldelAmbientePerú)
+```
+
+4.
+MAPA DE ÁREAS NATURALES PROTEGIDAS
+```{r}
+library(sp)
+library(rgdal)
+fromGit=("https://github.com/samanthagp/Estad-stica/blob/main/ANPNacionalDefinitivas%20(2).json?raw=true") 
+mapa1 <- rgdal::readOGR(fromGit,stringsAsFactors = FALSE)
+plot(mapa1)
+```
+
+MAPA DE CAPACIDAD DE USO MAYOR DE TIERRAS
+```{r}
+fromGit=("https://github.com/samanthagp/Estad-stica/blob/main/output%20(1).json?raw=true") 
+mapa2 <- rgdal::readOGR(fromGit,stringsAsFactors = FALSE)
+plot(mapa2)
+```
+
+MAPA DE REGIONES NATURALES
+```{r}
+fromGit=("https://github.com/samanthagp/Estad-stica/blob/main/region%20natural_geogpsperu_JuanPabloSuyoPomalia.json?raw=true") 
+mapa3 <- rgdal::readOGR(fromGit,stringsAsFactors = FALSE)
+plot(mapa3)
+```
+
+
+5.
+```{r}
+llave="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNhbWdAZ21haWwuY29tIiwibmJmIjoxNjMyMDYxMjk2LCJleHAiOjE2NjM1OTcyOTYsImlhdCI6MTYzMjA2MTI5Nn0.iRLo_fhaaSFR8EXTa_lrqMHySRbAmLA-HcBn2-dHPn8"
+
+link="https://datosabiertos.senace.gob.pe"
+RQJSON="/Api/ datastreams/"
+GUID="CarteraProyectos"
+FORMATO='/data.pjson/'
+KEY="?auth_key="
+
+request=paste0(link,RQJSON,GUID, FORMATO,KEY,llave)
+request
+
+library(jsonlite) 
+SENACE = fromJSON(request) 
+str(SENACE)
+```
+
