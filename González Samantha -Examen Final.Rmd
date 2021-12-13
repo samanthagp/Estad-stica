@@ -1,0 +1,245 @@
+---
+title: "Examen final estadística2"
+author: "Samantha González"
+date: "13/12/2021"
+output: html_document
+---
+*Limpieza de datos*
+LINK 1: List of freedom índices
+```{r}
+library(htmltab)
+library(rio)
+url1 = "https://en.wikipedia.org/wiki/List_of_freedom_indices"
+path1 = "/html/body/div[3]/div[3]/div[5]/div[1]/table[2]"
+freedom = htmltab(url1, path1)
+export(freedom, "freedom.csv")
+freedom = import("freedom.csv", encoding ="UTF-8")
+```
+
+LINK2: Democracy Index:
+Tabla1: tipo de régimen año 2020
+```{r}
+library(htmltab)
+url= "https://en.wikipedia.org/wiki/Democracy_Index"
+path= "/html/body/div[3]/div[3]/div[5]/div[1]/table[2]"
+regxaño = htmltab(url, path)
+export(regxaño, "regxaño.csv")
+regxaño = import("regxaño.csv", encoding ="UTF-8")
+```
+
+Tabla2: por región
+```{r}
+path2= "/html/body/div[3]/div[3]/div[5]/div[1]/table[3]"
+regxregion = htmltab(url, path2)
+export(regxregion, "regxregion.csv")
+regxregion = import("regxregion.csv", encoding ="UTF-8")
+```
+
+Tabla3: por región en 2020
+```{r}
+path3= "/html/body/div[3]/div[3]/div[5]/div[1]/table[4]"
+regxregion2 = htmltab(url, path3)
+export(regxregion2, "regxregion2.csv")
+regxregion2 = import("regxregion2.csv", encoding ="UTF-8")
+```
+
+Tabla 4: por país
+```{r}
+path4= "/html/body/div[3]/div[3]/div[5]/div[1]/table[6]"
+regxpais = htmltab(url, path4)
+export(regxpais, "regxpais.csv")
+regxpais = import("regxpais.csv", encoding ="UTF-8")
+regxpais$Country =trimws(regxpais$Country,which=c("left"),whitespace = "[\\h\\v]")
+```
+
+Tabla 5: Score changes
+```{r}
+path5= "/html/body/div[3]/div[3]/div[5]/div[1]/table[8]"
+regxsc = htmltab(url, path5)
+export(regxsc, "regxsc.csv")
+regxsc = import("regxsc.csv", encoding ="UTF-8")
+```
+
+Tabla 6: componentes 2020
+```{r}
+path6= "/html/body/div[3]/div[3]/div[5]/div[1]/table[10]"
+comp = htmltab(url, path6)
+export(comp, "comp.csv")
+comp = import("comp.csv", encoding ="UTF-8")
+```
+
+LINK3: 
+tabla1
+```{r}
+url3 = "https://en.wikipedia.org/wiki/World_Happiness_Report"
+path7 = "/html/body/div[3]/div[3]/div[5]/div[1]/div[11]/table/tbody/tr[2]/td"
+hap2020 = htmltab(url3, path7)
+export(hap2020, "hap2020.csv")
+hap2020 = import("hap2020.csv", encoding ="UTF-8")
+hap2020 = hap2020[,-c(1)]
+hap2020$`Country or region` =trimws(hap2020$`Country or region`,which=c("left"),whitespace = "[\\h\\v]")
+colnames(hap2020) = c("Country", "Score", "GDP per capita", "Social support", "Healthy life expectancy", "Freedom to make life choices", "Generosity", "Perceptions of corruption")
+hap2020[,c(2:8)]=lapply(hap2020[,c(2:8)],as.numeric)
+```
+
+tabla2
+```{r}
+path8 = "/html/body/div[3]/div[3]/div[5]/div[1]/div[12]/table/tbody/tr[2]/td"
+hap2019 = htmltab(url3, path8)
+```
+
+tabla3
+```{r}
+path9 = "/html/body/div[3]/div[3]/div[5]/div[1]/div[13]/table/tbody/tr[2]/td"
+hap2018 = htmltab(url3, path9)
+```
+
+tabla4
+```{r}
+path10 = "/html/body/div[3]/div[3]/div[5]/div[1]/div[14]/table/tbody/tr[2]/td"
+hap2017 = htmltab(url3, path10)
+```
+
+tabla5
+```{r}
+path11 = "/html/body/div[3]/div[3]/div[5]/div[1]/div[15]/table/tbody/tr[2]/td/table[2]"
+hap2016 = htmltab(url3, path11)
+```
+
+LINK4: CIA: military expenditures 
+```{r}
+library(rio)
+data9="https://github.com/samanthagp/Estad-stica/raw/main/export%20(1).csv"
+data9=import(data9)
+data9 = data9[,-c(4)]
+colnames(data9) = c("Country", "slug", "value", "ranking", "region")
+```
+
+LINK5: CIA education expenditures
+```{r}
+library(rio)
+data="https://github.com/samanthagp/Estad-stica/raw/main/export.csv"
+data=import(data)
+data = data[,-c(4)]
+colnames(data) = c("Country", "slug", "value", "ranking", "region")
+```
+
+LINK6:WBO (solo 2018)
+```{r}
+library(rio)
+datawb="https://github.com/samanthagp/Estad-stica/blob/main/API_SH.XPD.CHEX.GD.ZS_DS2_en_excel_v2_3360262.xls?raw=true"
+datawb=import(datawb)
+datawb = datawb[-c(1,2,3),]
+colnames(datawb) = c("Country", "Country Code", "Indicator Name", "Indicator Code", "2018")
+```
+
+LINK7: tasa mortalidad infantil
+```{r}
+urll= "https://www.cia.gov/the-world-factbook/field/infant-mortality-rate/country-comparison"
+path13= "/html/body/div/div[1]/div[2]/main/section[2]/div/div/div[2]/div/div/div/div/div/table"
+ciak = htmltab(urll, path13)
+export(ciak, "ciak.csv")
+ciak = import("ciak.csv", encoding ="UTF-8")
+```
+
+
+LINK8:CIA: net inmigration rate 
+```{r}
+urlll= "https://www.cia.gov/the-world-factbook/field/net-migration-rate/country-comparison "
+path14= "/html/body/div/div[1]/div[2]/main/section[2]/div/div/div[2]/div/div/div/div/div/table"
+ciaa = htmltab(urlll, path14)
+export(ciaa, "ciaa.csv")
+ciaa = import("ciaa.csv", encoding ="UTF-8")
+```
+
+LINK9: unemployment rate
+```{r}
+urrl= "https://www.cia.gov/the-world-factbook/field/unemployment-rate/country-comparison "
+path15= "/html/body/div/div[1]/div[2]/main/section[2]/div/div/div[2]/div/div/div/div/div/table"
+ciakk = htmltab(urrl, path15)
+export(ciakk, "ciakk.csv")
+ciakk = import("ciakk.csv", encoding ="UTF-8")
+```
+
+*Resolución*
+PARTE 1:
+```{r}
+set.seed(123)
+# Eliminar NA
+freedom = freedom[-c(4,6,12,15,18,25,49,69,76,82,92,95,103,104,110,113,117,119,125,136,137,149:154,158,163,164,166,173,179,184,192,195),]
+str(freedom)
+freedom$`Freedom in the World 2021`=as.factor(freedom$`Freedom in the World 2021`)
+freedom$`2021 Index of Economic Freedom`=as.factor(freedom$`2021 Index of Economic Freedom`)
+freedom$`2021 Press Freedom Index`=as.factor(freedom$`2021 Press Freedom Index`)
+freedom$`2020 Democracy Index`= as.factor(freedom$`2020 Democracy Index`)
+freedom$Country=as.factor(freedom$Country)
+```
+
+```{r}
+library(cluster)
+g.dist = daisy(freedom, metric="gower")
+pam.resultado=pam(g.dist,5,cluster.only = F)
+freedom$clustPT=pam.resultado$cluster
+View(freedom)
+```
+
+PARTE2: regxpais Y hap2020
+```{r}
+basee =merge(regxpais, hap2020, by = "Country")
+regxpais = regxpais[,c(1:5)]
+```
+
+```{r}
+set.seed(123)
+g.dist = daisy(basee[,c(5,6)], metric="gower")
+library(factoextra)
+fviz_nbclust(basee[,c(5,6)], pam,diss=g.dist,method = "gap_stat",k.max = 10,verbose = F)
+```
+
+```{r}
+library(polycor)
+corMatrix=polycor::hetcor(basee)$correlations
+library(ggcorrplot)
+ggcorrplot(corMatrix)
+```
+
+```{r}
+library(psych)
+psych::KMO(corMatrix) 
+```
+```{r}
+dontselect=c("Country","Generosity","Perceptions of corruption","Regime type","Region")
+select=setdiff(names(basee),dontselect) 
+basee=basee[,select]
+cortest.bartlett(corMatrix,n=nrow(basee))$p.value>0.05
+library(matrixcalc)
+is.singular.matrix(corMatrix)
+library(GPArotation)
+x <- fa(basee,
+            nfactors = 1,
+            cor = 'mixed',
+            rotate = "varimax",
+            fm="minres")
+print(x$loadings)
+```
+```{r}
+print(x$loadings,cutoff = 0.5)
+```
+```{r}
+fa.diagram(x)
+sort(x$complexity)
+```
+
+PARTE3: 
+```{r}
+b3 =merge(datawb, data9, by = "Country")
+b4 = merge(b3, data, by = "Country" )
+b4[!complete.cases(b4),"Country"]
+str(b4)
+```
+
+```{r}
+modelo1=formula(value1~2018+value)
+library(stargazer)
+```
+
